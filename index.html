@@ -87,6 +87,9 @@
     display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap:12px;
     padding:20px 16px calc(env(safe-area-inset-bottom,0px) + 110px);
   }
+  @media (min-width: 768px) {
+    #grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
   .card{
     position:relative;
     background:var(--paper);
