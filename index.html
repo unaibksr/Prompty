@@ -359,6 +359,7 @@
           .select('*')
           .order('created_at', { ascending: false });
         if(error) throw error;
+
         if(rows && rows.length > 0){
           data.prompts = rows.map(r => ({
             id: r.id,
@@ -373,19 +374,26 @@
         }
 
         if(localData && localData.length > 0){
-          for(const p of localData){
-            const { error } = await supabase
-              .from('prompts')
-              .insert({ title: p.title, description: p.description, tags: p.tags || [] });
-            if(error) throw error;
+          const existingTitles = new Set((rows || []).map(r => (r.title || '').toLowerCase()));
+          const toInsert = localData.filter(p => !existingTitles.has((p.title || '').toLowerCase()));
+
+          if(toInsert.length > 0){
+            for(const p of toInsert){
+              const { error } = await supabase
+                .from('prompts')
+                .insert({ title: p.title, description: p.description, tags: p.tags || [] });
+              if(error) throw error;
+            }
           }
+
           localStorage.removeItem(STORAGE_KEY);
-          const { data: rows, error } = await supabase
+
+          const { data: newRows, error } = await supabase
             .from('prompts')
             .select('*')
             .order('created_at', { ascending: false });
           if(error) throw error;
-          data.prompts = rows.map(r => ({
+          data.prompts = newRows.map(r => ({
             id: r.id,
             num: r.num,
             title: r.title,
