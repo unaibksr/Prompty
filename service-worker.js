@@ -4,7 +4,7 @@
 //   - Google Fonts: stale-while-revalidate, fast paint from cache, refreshed in the background
 // Bump CACHE_VERSION whenever app-shell files change so old caches are cleared out.
 
-const CACHE_VERSION = 'v5';
+const CACHE_VERSION = 'v6';
 const CACHE_NAME = `prompts-shell-${CACHE_VERSION}`;
 
 const APP_SHELL = [
